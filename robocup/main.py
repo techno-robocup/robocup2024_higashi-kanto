@@ -12,7 +12,7 @@ __DEBUG__MOTOR__ = False #モーターの動作を確認したい時にTrueに�
 #モーターが全速力で動く(ようなプログラムを作る)
 __DEBUG__COLORSENSOR__ = False #カラーセンサーをデバックするときはTrueに
 #カラーセンサーの値をコンソールに出力する(プログラムにする)
-__CONST__CLOCK = 7 #プログラムの周期を設定
+__CONST__CLOCK = 3 #プログラムの周期を設定
 __CONST__SPEED = 130 #何もなくても100のスピードで動くようにする
 __CONST__WHITE = 100 #白として判定する明るさのしきい値
 ev3 = EV3Brick() #ev3オブジェクトの生成
@@ -51,8 +51,8 @@ while True:
     getline()
     if __DEBUG__:
         print(_COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG) #平均を出力する
-    _MOTOR_L.run((_COLORSENSOR_L_AVG - _COLORSENSOR_R_AVG) * 1 + __CONST__SPEED)
-    _MOTOR_R.run((_COLORSENSOR_R_AVG - _COLORSENSOR_L_AVG) * 1 + __CONST__SPEED)
+    _MOTOR_L.run((_COLORSENSOR_L_AVG - _COLORSENSOR_R_AVG) * 3 + __CONST__SPEED)
+    _MOTOR_R.run((_COLORSENSOR_R_AVG - _COLORSENSOR_L_AVG) * 3 + __CONST__SPEED)
     if _COLORSENSOR_L_AVG < __CONST__WHITE: #もししばらく暗くなったら
         if __DEBUG__:
             print("LEFT BLACK", _COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG)
@@ -65,14 +65,14 @@ while True:
         while _COLORSENSOR_L_AVG > __CONST__WHITE: #明るい間
             print("now white")
             getline()
-            _MOTOR_L.run(-__CONST__SPEED) #左に
-            _MOTOR_R.run(__CONST__SPEED) #回転する
+            _MOTOR_L.run(70) #左に
+            _MOTOR_R.run(150) #回転する
         _COLORSENSOR_L_AVG = __CONST__WHITE - 1 #少し数値を補正
         #次のwhile文に引っかからないといけないため
         while _COLORSENSOR_L_AVG < __CONST__WHITE: #暗い間
             print("now black")
             getline()
-            _MOTOR_L.run(-__CONST__SPEED) #左に
-            _MOTOR_R.run(__CONST__SPEED) #回転する
+            _MOTOR_L.run(70) #左に
+            _MOTOR_R.run(150) #回転する
         if __DEBUG__:
             print("LEFT END", _COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG)
