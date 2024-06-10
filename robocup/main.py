@@ -6,73 +6,55 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-__DEBUG__ = True #デバッグするときにTrueにする
-#Trueにするとコンソールへ出力してくれる(ようなプログラムにする)
-__DEBUG__MOTOR__ = False #モーターの動作を確認したい時にTrueにする
-#モーターが全速力で動く(ようなプログラムを作る)
-__DEBUG__COLORSENSOR__ = False #カラーセンサーをデバックするときはTrueに
-#カラーセンサーの値をコンソールに出力する(プログラムにする)
-__CONST__CLOCK = 3 #プログラムの周期を設定
-__CONST__SPEED = 130 #何もなくても100のスピードで動くようにする
-__CONST__WHITE = 100 #白として判定する明るさのしきい値
-ev3 = EV3Brick() #ev3オブジェクトの生成
-_MOTOR_L = Motor(Port.A) #左モーターオブジェクトの生成
-_MOTOR_R = Motor(Port.D) #右モーターオブジェクトの生成
-_MOTOR_ARM = Motor(Port.B) #アームモーターオブジェクトの生成
-_COLORSENSOR_L = ColorSensor(Port.S1) #左カラーセンサーオブジェクトの生成
-_COLORSENSOR_R = ColorSensor(Port.S4) #右カラーセンサーオブジェクトの生成
-_COLORSENSOR_L_R = 0 #左カラーセンサーREDの値保存用の変数
-_COLORSENSOR_L_G = 0 #GREEN
-_COLORSENSOR_L_B = 0 #BLUE
-_COLORSENSOR_R_R = 0 #右カラーセンサーREDの値保存用の変数
-_COLORSENSOR_R_G = 0 #GREEN
-_COLORSENSOR_R_B = 0 #BLUE
-_COLORSENSOR_L_AVG = 0 #左カラーセンサーの過去(__CONST__CLOCK)のRGBの合計の平均
-_COLORSENSOR_R_AVG = 0 #右カラーセンサーの過去(__CONST__CLOCK)のRGBの合計の平均
+# Does not have for __DEBUG__ to be True
+# FROM UNDER THIS LINE, 
+# DO NOT CHANGE THE NAME THAT STARTS FROM '__'
+# DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
+# PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
+# IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
+__DEBUG__ = True # Turn it on if you want to print debug info into console
+__DEBUG__MOTOR__ = True # Turn on if you want to check how the motor is working
+__DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
+__CONST__CLOCK__ = 3 # Define the clock speed
+__CONST__SPEED__ = 50 # The default speed to move
+__CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
+__CONST__PROPORTION__ = 3
+ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
+__CONST__MOTOR__L__ = Motor(Port.A)
+__CONST__MOTOR__R__ = Motor(Port.D)
+__CONST__MOTOR__ARM__ = Motor(Port.B)
+__CONST__COLORSENSOR__L__ = ColorSensor(Port.S1)
+__CONST__COLORSENSOR__R__ = ColorSensor(Port.S2)
+_COLORSENSOR_L_R = 0
+_COLORSENSOR_L_G = 0
+_COLORSENSOR_L_B = 0
+_COLORSENSOR_R_R = 0
+_COLORSENSOR_R_G = 0
+_COLORSENSOR_R_B = 0
+_COLORSENSOR_L_SUM = 0
+_COLORSENSOR_R_SUM = 0
 # Write your program here.
 def getline():
-    global __CONST__CLOCK, ev3, _MOTOR_L, _MOTOR_R, _MOTOR_ARM, _COLORSENSOR_L, _COLORSENSOR_R, _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B, _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B, _COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG #オブジェクトがグローバル変数であることを明記する
-    _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B = _COLORSENSOR_L.rgb() #左カラーセンサーの変数に値を格納
-    _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B = _COLORSENSOR_R.rgb() #右カラーセンサーの変数に値を格納
-    _COLORSENSOR_L_AVG = (_COLORSENSOR_L_AVG * (__CONST__CLOCK - 1) + _COLORSENSOR_L_R + _COLORSENSOR_L_G + _COLORSENSOR_L_B) // __CONST__CLOCK #左カラーセンサー平均を計算
-    _COLORSENSOR_R_AVG = (_COLORSENSOR_R_AVG * (__CONST__CLOCK - 1) + _COLORSENSOR_R_R + _COLORSENSOR_R_G + _COLORSENSOR_R_B) // __CONST__CLOCK #右カラーセンサーの平均を計算
+    global __DEBUG__, __DEBUG__MOTOR__, __DEBUG__COLORSENSOR__, __CONST__CLOCK__, __CONST__SPEED__, __CONST__WHITE__, ev3, __CONST__MOTOR__L__, __CONST__MOTOR__R__, __CONST__MOTOR__ARM__, __CONST__COLORSENSOR__L__, __CONST__COLORSENSOR__R__, _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B, _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B, _COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM, __CONST__PROPORTION__
+    _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B = __CONST__COLORSENSOR__L__.rgb()
+    _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B = __CONST__COLORSENSOR__R__.rgb()
+    _COLORSENSOR_L_SUM = _COLORSENSOR_L_R + _COLORSENSOR_L_G + _COLORSENSOR_L_B
+    _COLORSENSOR_R_SUM = _COLORSENSOR_R_R + _COLORSENSOR_R_G + _COLORSENSOR_R_B
 ev3.speaker.beep()
-if __DEBUG__MOTOR__: #もしモーターでバッグが定義されていたら
+for i in range(1000):
+    __CONST__MOTOR__ARM__.run(-100)
+if __DEBUG__MOTOR__:
     while True:
-        _MOTOR_L.run(150) #右モーターを動かす
-        _MOTOR_R.run(150) #左モーターを動かす
-if __DEBUG__COLORSENSOR__: #カラーセンサーデバックが定義されていたら
-    while True: #ずっと
-        getline()
-        print(_COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG) #平均を出力
-for _ in range(__CONST__CLOCK):
-    getline()
+        for i in range(1000):
+            __CONST__MOTOR__L__.run(1000)
+            __CONST__MOTOR__R__.run(1000)
+        for i in range(1000):
+            __CONST__MOTOR__L__.run(-1000)
+            __CONST__MOTOR__R__.run(-1000)
 while True:
-    getline()
     if __DEBUG__:
-        print(_COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG) #平均を出力する
-    _MOTOR_L.run((_COLORSENSOR_L_AVG - _COLORSENSOR_R_AVG) * 3 + __CONST__SPEED)
-    _MOTOR_R.run((_COLORSENSOR_R_AVG - _COLORSENSOR_L_AVG) * 3 + __CONST__SPEED)
-    if _COLORSENSOR_L_AVG < __CONST__WHITE: #もししばらく暗くなったら
-        if __DEBUG__:
-            print("LEFT BLACK", _COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG)
-        while _COLORSENSOR_L_AVG < __CONST__WHITE: #暗い間
-            if __DEBUG__:
-                print("going straight")
-            getline() #センサーの値を更新して
-            _MOTOR_L.run(__CONST__SPEED) #左モーターを進める
-            _MOTOR_R.run(__CONST__SPEED) #右モーターを進める
-        while _COLORSENSOR_L_AVG > __CONST__WHITE: #明るい間
-            print("now white")
-            getline()
-            _MOTOR_L.run(70) #左に
-            _MOTOR_R.run(150) #回転する
-        _COLORSENSOR_L_AVG = __CONST__WHITE - 1 #少し数値を補正
-        #次のwhile文に引っかからないといけないため
-        while _COLORSENSOR_L_AVG < __CONST__WHITE: #暗い間
-            print("now black")
-            getline()
-            _MOTOR_L.run(70) #左に
-            _MOTOR_R.run(150) #回転する
-        if __DEBUG__:
-            print("LEFT END", _COLORSENSOR_L_AVG, _COLORSENSOR_R_AVG)
+        print(_COLORSENSOR_L_SUM, _COLORSENSOR_R_SUM)
+        print(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM, _COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM)
+    getline()
+    __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM))
+    __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM))
