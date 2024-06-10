@@ -6,16 +6,15 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-# Does not have for __DEBUG__ to be True
 # FROM UNDER THIS LINE, 
 # DO NOT CHANGE THE NAME THAT STARTS FROM '__'
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
 # PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
 __DEBUG__ = True # Turn it on if you want to print debug info into console
-__DEBUG__MOTOR__ = True # Turn on if you want to check how the motor is working
+__DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
 __DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
-__CONST__CLOCK__ = 3 # Define the clock speed
+#__CONST__CLOCK__ = 3 # Define the clock speed
 __CONST__SPEED__ = 50 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
 __CONST__PROPORTION__ = 3
