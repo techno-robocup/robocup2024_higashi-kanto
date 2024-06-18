@@ -12,13 +12,13 @@ import time
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
 # PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
-__DEBUG__ = False # Turn it on if you want to print debug info into console
+__DEBUG__ = True # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
 __DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
 #__CONST__CLOCK__ = 3 # Define the clock speed
-__CONST__SPEED__ = 150 # The default speed to move
+__CONST__SPEED__ = 50 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
-__CONST__PROPORTION__ = 1
+__CONST__PROPORTION__ = 2
 ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
 __CONST__MOTOR__L__ = Motor(Port.A)
 __CONST__MOTOR__R__ = Motor(Port.D)
@@ -35,6 +35,7 @@ _COLORSENSOR_R_G = 0
 _COLORSENSOR_R_B = 0
 _COLORSENSOR_L_SUM = 0
 _COLORSENSOR_R_SUM = 0
+_COLORSENSOR_LR_AVG = 0
 # Write your program here.
 def getline():
     global __DEBUG__, __DEBUG__MOTOR__, __DEBUG__COLORSENSOR__, __CONST__CLOCK__, __CONST__SPEED__, __CONST__WHITE__, ev3, __CONST__MOTOR__L__, __CONST__MOTOR__R__, __CONST__MOTOR__ARM__, __CONST__COLORSENSOR__L__, __CONST__COLORSENSOR__R__, _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B, _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B, _COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM, __CONST__PROPORTION__
@@ -42,6 +43,20 @@ def getline():
     _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B = __CONST__COLORSENSOR__R__.rgb()
     _COLORSENSOR_L_SUM = _COLORSENSOR_L_R + _COLORSENSOR_L_G + _COLORSENSOR_L_B
     _COLORSENSOR_R_SUM = _COLORSENSOR_R_R + _COLORSENSOR_R_G + _COLORSENSOR_R_B
+    _COLORSENSOR_LR_AVG = (_COLORSENSOR_L_SUM + _COLORSENSOR_R_SUM) // 2
+def avoid():
+    for i in range(2000):
+        __CONST__MOTOR__L__.run(-2000)
+        __CONST__MOTOR__R__.run(2000)
+    for i in range(3000):
+        __CONST__MOTOR__L__.run(-1000)
+        __CONST__MOTOR__R__.run(2000)
+    while(_COLORSENSOR_L_SUM < 50 or _COLORSENSOR_R_SUM < 50):
+        __CONST__MOTOR__L__.run(-1000)
+        __CONST__MOTOR__R__.run(2000)
+        if(__CONST__TOUCHSENSOR_R.pressed()):
+            __CONST__MOTOR__L__.run(-2000)
+            __CONST__MOTOR__R__.run(1000)
 ev3.speaker.beep()
 # <!-- DEBUG MOTOR -->
 if __DEBUG__MOTOR__:
@@ -67,5 +82,7 @@ while True:
         print(_COLORSENSOR_L_SUM, _COLORSENSOR_R_SUM)
         print(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM, _COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM)
     getline()
-    __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM))
-    __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM))
+    __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_LR_AVG))
+    __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_LR_AVG))
+    if (__CONST__TOUCHSENSOR_L.pressed() and __CONST__TOUCHSENSOR_R.pressed()):
+        avoid()
