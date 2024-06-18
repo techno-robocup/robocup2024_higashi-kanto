@@ -6,24 +6,27 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
+import time
 # FROM UNDER THIS LINE, 
 # DO NOT CHANGE THE NAME THAT STARTS FROM '__'
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
 # PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
-__DEBUG__ = True # Turn it on if you want to print debug info into console
+__DEBUG__ = False # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
 __DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
 #__CONST__CLOCK__ = 3 # Define the clock speed
-__CONST__SPEED__ = 50 # The default speed to move
+__CONST__SPEED__ = 150 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
-__CONST__PROPORTION__ = 3
+__CONST__PROPORTION__ = 1
 ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
 __CONST__MOTOR__L__ = Motor(Port.A)
 __CONST__MOTOR__R__ = Motor(Port.D)
 __CONST__MOTOR__ARM__ = Motor(Port.B)
 __CONST__COLORSENSOR__L__ = ColorSensor(Port.S1)
 __CONST__COLORSENSOR__R__ = ColorSensor(Port.S2)
+__CONST__TOUCHSENSOR_L = TouchSensor(Port.S4)
+__CONST__TOUCHSENSOR_R = TouchSensor(Port.S3)
 _COLORSENSOR_L_R = 0
 _COLORSENSOR_L_G = 0
 _COLORSENSOR_L_B = 0
@@ -40,8 +43,7 @@ def getline():
     _COLORSENSOR_L_SUM = _COLORSENSOR_L_R + _COLORSENSOR_L_G + _COLORSENSOR_L_B
     _COLORSENSOR_R_SUM = _COLORSENSOR_R_R + _COLORSENSOR_R_G + _COLORSENSOR_R_B
 ev3.speaker.beep()
-for i in range(1000):
-    __CONST__MOTOR__ARM__.run(-100)
+# <!-- DEBUG MOTOR -->
 if __DEBUG__MOTOR__:
     while True:
         for i in range(1000):
@@ -50,6 +52,16 @@ if __DEBUG__MOTOR__:
         for i in range(1000):
             __CONST__MOTOR__L__.run(-1000)
             __CONST__MOTOR__R__.run(-1000)
+# <!-- DEBUG COLORSENSOR -->
+if __DEBUG__COLORSENSOR__:
+    while True:
+        getline()
+        print(_COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM)
+        print(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B)
+        print(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
+        time.sleep(1)
+for i in range(1000):
+    __CONST__MOTOR__ARM__.run(-100)
 while True:
     if __DEBUG__:
         print(_COLORSENSOR_L_SUM, _COLORSENSOR_R_SUM)
