@@ -109,6 +109,7 @@ while True:
     getline()
     __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM) + _I_SUM * __CONST__I__ + _D_SUM * __CONST__D__)
     __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM) - _I_SUM * __CONST__I__ - _D_SUM * __CONST__D__)
+'''
     if isgreen(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
         if __DEBUG__:
             print("RIGHT GREEN")
@@ -131,3 +132,4 @@ while True:
         while time.time()-start<=0.5:
             __CONST__MOTOR__L__.run(100)
             __CONST__MOTOR__R__.run(100)
+'''
