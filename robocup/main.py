@@ -98,7 +98,7 @@ if __DEBUG__COLORSENSOR__:
         print(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
         time.sleep(1)
 for i in range(1000):
-    __CONST__MOTOR__ARM__.run(-10000)
+    __CONST__MOTOR__ARM__.run(-1000)
 while True:
     if __DEBUG__:
         #print(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_AVGSUM - _COLORSENSOR_L_AVGSUM),__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_AVGSUM - _COLORSENSOR_R_AVGSUM))
