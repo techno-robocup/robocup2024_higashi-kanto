@@ -6,7 +6,7 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-import time
+import time 
 # FROM UNDER THIS LINE, 
 # DO NOT CHANGE THE NAME THAT STARTS FROM '__'
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
@@ -14,9 +14,10 @@ import time
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
 __DEBUG__ = False # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
-__DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
+__DEBUG__COLORSENSOR__ =False # Turn on if you want to print the colorsensor's data in to console
+__DEBUG__COLORSENSOR__GREEN__ = True # Turn on if you want to check whether it is judged as green.
 __CONST__CLOCK__ = 1 # Define the clock speed
-__CONST__SPEED__ = 100 # The default speed to move
+__CONST__SPEED__ = 120 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
 __CONST__BLACK__ = 50 # The threshold for recognizing as BLACK
 __CONST__PROPORTION__ = 2.25
@@ -109,27 +110,35 @@ while True:
     getline()
     __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM) + _I_SUM * __CONST__I__ + _D_SUM * __CONST__D__)
     __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM) - _I_SUM * __CONST__I__ - _D_SUM * __CONST__D__)
-'''
     if isgreen(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
-        if __DEBUG__:
+        if __DEBUG__COLORSENSOR__GREEN__:
             print("RIGHT GREEN")
         ev3.speaker.beep()
         start=time.time()
-        while time.time()-start<=0.5:
-            __CONST__MOTOR__L__.run(100)
-            __CONST__MOTOR__R__.run(-100)
-        while time.time()-start<=0.5:
-            __CONST__MOTOR__L__.run(100)
-            __CONST__MOTOR__R__.run(100)
+        while time.time()-start<=0.8:
+            __CONST__MOTOR__L__.run(150)
+            __CONST__MOTOR__R__.run(150)
+        ev3.speaker.beep()
+        while time.time()-start<=3:
+            __CONST__MOTOR__L__.run(150)
+            __CONST__MOTOR__R__.run(-200)
+        ev3.speaker.beep()
+        while time.time()-start<=2:
+            __CONST__MOTOR__L__.run(150)
+            __CONST__MOTOR__R__.run(180)
     if isgreen(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
-        if __DEBUG__:
+        if __DEBUG__COLORSENSOR__GREEN__:
             print("LEFT GREEN")
         ev3.speaker.beep()
         start=time.time()
-        while time.time()-start<=0.5:
-            __CONST__MOTOR__L__.run(-100)
-            __CONST__MOTOR__R__.run(100)
-        while time.time()-start<=0.5:
-            __CONST__MOTOR__L__.run(100)
-            __CONST__MOTOR__R__.run(100)
-'''
+        while time.time()-start<=0.8:
+            __CONST__MOTOR__L__.run(150)
+            __CONST__MOTOR__R__.run(150)
+        ev3.speaker.beep()
+        while time.time()-start<=3:
+            __CONST__MOTOR__L__.run(-200)
+            __CONST__MOTOR__R__.run(150)
+        ev3.speaker.beep()
+        while time.time()-start<=2:
+            __CONST__MOTOR__L__.run(180)
+            __CONST__MOTOR__R__.run(150)
