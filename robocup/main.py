@@ -102,6 +102,7 @@ def isgreen_L(r,g,b)->bool:
         if(140 < _COLORSENSOR_L_HSV < 170 and 20 > max(r,g,b) / 255 * 100 > 10):
             return True
         return False
+    return False
 def isgreen_R(r,g,b)->bool:
     global _COLORSENSOR_R_HSV
     if(max(r,g,b) == r and max(r,g,b) - min(r,g,b) != 0):
@@ -125,6 +126,7 @@ def isgreen_R(r,g,b)->bool:
         if(135 < _COLORSENSOR_R_HSV < 155 and 20 > max(r,g,b) / 255 * 100 > 10):
             return True
         return False
+    return False
 ev3.speaker.beep()
 for _ in range(__CONST__CLOCK__):
     getline()
