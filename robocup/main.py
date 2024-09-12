@@ -62,22 +62,7 @@ def getline():
     _COLORSENSOR_R_AVGSUM = ((_COLORSENSOR_R_AVGSUM) * (__CONST__CLOCK__ - 1) + _COLORSENSOR_R_SUM) // __CONST__CLOCK__
     _I_SUM += _COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM
     _D_SUM = (_COLORSENSOR_L_SUM_BEFORE - _COLORSENSOR_R_SUM_BEFORE) - (_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM)
-"""
-def avoid():
-    global __DEBUG__, __DEBUG__MOTOR__, __DEBUG__COLORSENSOR__, __CONST__CLOCK__, __CONST__SPEED__, __CONST__WHITE__, ev3, __CONST__MOTOR__L__, __CONST__MOTOR__R__, __CONST__MOTOR__ARM__, __CONST__COLORSENSOR__L__, __CONST__COLORSENSOR__R__, _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B, _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B, _COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM, __CONST__PROPORTION__, _COLORSENSOR_L_AVGSUM, _COLORSENSOR_R_AVGSUM, _COLORSENSOR_L_HSV, _COLORSENSOR_R_HSV
-    for i in range(2000):
-        __CONST__MOTOR__L__.run(-2000)
-        __CONST__MOTOR__R__.run(2000)
-    for i in range(3000):
-        __CONST__MOTOR__L__.run(-1000)
-        __CONST__MOTOR__R__.run(2000)
-    while(_COLORSENSOR_L_SUM < 50 or _COLORSENSOR_R_SUM < 50):
-        __CONST__MOTOR__L__.run(-1000)
-        __CONST__MOTOR__R__.run(2000)
-        if(__CONST__TOUCHSENSOR_R.pressed()):
-            __CONST__MOTOR__L__.run(-2000)
-            __CONST__MOTOR__R__.run(1000)
-"""
+
 def isgreen_L(r,g,b)->bool:
     global _COLORSENSOR_L_HSV
 
@@ -147,8 +132,8 @@ if __DEBUG__COLORSENSOR__:
         print(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B)
         print(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
         time.sleep(1)
-#for i in range(1000):
-#    __CONST__MOTOR__ARM__.run(-1000)
+for i in range(1000):
+   __CONST__MOTOR__ARM__.run(-1000)
 while True:
     if __DEBUG__:
         print(__CONST__COLORSENSOR__L__.rgb())
@@ -164,6 +149,7 @@ while True:
         if isgreen_R(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
                 print("RIGHT GREEN")
                 ev3.speaker.beep()
+    """
     if isgreen_R(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
         if __DEBUG__COLORSENSOR__GREEN__:
             print("RIGHT GREEN")
@@ -171,9 +157,19 @@ while True:
         time.sleep(0.5)
         ev3.speaker.beep()
         __CONST__MOTOR__R__.brake()
+        __CONST__MOTOR__L__.brake()
+        time.sleep(0.5)
     if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
         if __DEBUG__COLORSENSOR__GREEN__:
             print("LEFT GREEN")
         ev3.speaker.beep()
         time.sleep(0.5)
         __CONST__MOTOR__L__.brake()
+        __CONST__MOTOR__R__.brake()
+        time.sleep(0.5)
+    """
+    if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B) and isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
+        ev3.speaker.beep(frequency=440)
+        __CONST__MOTOR__L__.run(100)
+        __CONST__MOTOR__R__.run(-100)
+        time.sleep(6.7)
