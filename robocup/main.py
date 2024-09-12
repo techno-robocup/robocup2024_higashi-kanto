@@ -112,6 +112,10 @@ def isgreen_R(r,g,b)->bool:
             return True
         return False
     return False
+def isred(r,g,b)->bool:
+    if r >= 60:
+        return True
+    return False
 ev3.speaker.beep()
 for _ in range(__CONST__CLOCK__):
     getline()
