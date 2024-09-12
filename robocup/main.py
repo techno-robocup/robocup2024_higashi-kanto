@@ -6,23 +6,23 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-import time 
-# FROM UNDER THIS LINE, 
+import time
+# FROM UNDER THIS LINE,
 # DO NOT CHANGE THE NAME THAT STARTS FROM '__'
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
 # PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
-__DEBUG__ = False # Turn it on if you want to print debug info into console
+__DEBUG__ = True # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
 __DEBUG__COLORSENSOR__ =False # Turn on if you want to print the colorsensor's data in to console
 __DEBUG__COLORSENSOR__GREEN__ = False # Turn on if you want to check whether it is judged as green.
 __CONST__CLOCK__ = 1 # Define the clock speed
-__CONST__SPEED__ = 120 # The default speed to move
+__CONST__SPEED__ = 80 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
 __CONST__BLACK__ = 50 # The threshold for recognizing as BLACK
-__CONST__PROPORTION__ = 2.25
-__CONST__I__ = 0.00058
-__CONST__D__ = 11
+__CONST__PROPORTION__ = 1.2
+__CONST__I__ = 0.00055
+__CONST__D__ = 8
 ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
 __CONST__MOTOR__L__ = Motor(Port.A)
 __CONST__MOTOR__R__ = Motor(Port.D)
@@ -123,8 +123,7 @@ def isgreen_R(r,g,b)->bool:
         _COLORSENSOR_R_HSV = 60 * (r - g) / (max(r,g,b) - min(r,g,b)) + 240
         if(_COLORSENSOR_R_HSV < 0):
             _COLORSENSOR_R_HSV += 360
-        if(129 < _COLORSENSOR_R_HSV < 135 and 20 > max(r,g,b) / 255 * 100 > 10 and 42
-         < _COLORSENSOR_R_G <= 45):
+        if(129 < _COLORSENSOR_R_HSV < 135 and 20 > max(r,g,b) / 255 * 100 > 10 and 42 < _COLORSENSOR_R_G <= 45):
             return True
         return False
     return False
@@ -152,11 +151,8 @@ if __DEBUG__COLORSENSOR__:
 #    __CONST__MOTOR__ARM__.run(-1000)
 while True:
     if __DEBUG__:
-        print(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_AVGSUM - _COLORSENSOR_L_AVGSUM),__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_AVGSUM - _COLORSENSOR_R_AVGSUM))
-        print(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM) + _I_SUM * __CONST__I__ + _D_SUM * __CONST__D__,__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM) - _I_SUM * __CONST__I__ - _D_SUM * __CONST__D__)
-        print(_COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM)
-        print(_I_SUM * __CONST__I__)
-        print(_D_SUM * __CONST__D__)
+        print(__CONST__COLORSENSOR__L__.rgb())
+        print(__CONST__COLORSENSOR__R__.rgb())
     getline()
     __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM) + _I_SUM * __CONST__I__ + _D_SUM * __CONST__D__)
     __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM) - _I_SUM * __CONST__I__ - _D_SUM * __CONST__D__)
@@ -174,36 +170,10 @@ while True:
         ev3.speaker.beep()
         time.sleep(0.5)
         ev3.speaker.beep()
-        """
-        start=time.time()
-        while time.time()-start<=0.8:
-            __CONST__MOTOR__L__.run(150)
-            __CONST__MOTOR__R__.run(150)
-        ev3.speaker.beep()
-        while time.time()-start<=3:
-            __CONST__MOTOR__L__.run(150)
-            __CONST__MOTOR__R__.run(-200)
-        ev3.speaker.beep()
-        while time.time()-start<=2:
-            __CONST__MOTOR__L__.run(150)
-            __CONST__MOTOR__R__.run(180)
-        """
+        __CONST__MOTOR__R__.brake()
     if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
         if __DEBUG__COLORSENSOR__GREEN__:
             print("LEFT GREEN")
         ev3.speaker.beep()
         time.sleep(0.5)
-        """
-        start=time.time()
-        while time.time()-start<=0.8:
-            __CONST__MOTOR__L__.run(150)
-            __CONST__MOTOR__R__.run(150)
-        ev3.speaker.beep()
-        while time.time()-start<=3:
-            __CONST__MOTOR__L__.run(-200)
-            __CONST__MOTOR__R__.run(150)
-        ev3.speaker.beep()
-        while time.time()-start<=2:
-            __CONST__MOTOR__L__.run(180)
-            __CONST__MOTOR__R__.run(150)
-        """
+        __CONST__MOTOR__L__.brake()
