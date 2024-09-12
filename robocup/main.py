@@ -12,15 +12,15 @@ import time
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
 # PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
-__DEBUG__ = True # Turn it on if you want to print debug info into console
+__DEBUG__ = False # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
 __DEBUG__COLORSENSOR__ =False # Turn on if you want to print the colorsensor's data in to console
 __DEBUG__COLORSENSOR__GREEN__ = False # Turn on if you want to check whether it is judged as green.
 __CONST__CLOCK__ = 1 # Define the clock speed
-__CONST__SPEED__ = 80 # The default speed to move
+__CONST__SPEED__ = 70 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
 __CONST__BLACK__ = 50 # The threshold for recognizing as BLACK
-__CONST__PROPORTION__ = 1.1
+__CONST__PROPORTION__ = 1.2
 __CONST__I__ = 0.00055
 __CONST__D__ = 6.8
 ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
