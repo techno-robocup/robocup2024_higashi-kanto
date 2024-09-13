@@ -12,9 +12,9 @@ import time
 # DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
 # PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
 # IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
-__DEBUG__ = False # Turn it on if you want to print debug info into console
+__DEBUG__ = True # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
-__DEBUG__COLORSENSOR__ = True # Turn on if you want to print the colorsensor's data in to console
+__DEBUG__COLORSENSOR__ =False # Turn on if you want to print the colorsensor's data in to console
 __DEBUG__COLORSENSOR__GREEN__ = False # Turn on if you want to check whether it is judged as green.
 __CONST__CLOCK__ = 1 # Define the clock speed
 __CONST__SPEED__ = 70 # The default speed to move
@@ -115,7 +115,6 @@ def isgreen_R(r,g,b)->bool:
 def isred_R(r,g,b)->bool:
     if 49 >= r >= 40 and 20 >= g and 20 >= b:
         return True
-        
     return False
 def isred_L(r,g,b)->bool:
     if 67 >= r >= 60 and 20 >= g and 20 >= b:
@@ -137,9 +136,9 @@ if __DEBUG__MOTOR__:
 if __DEBUG__COLORSENSOR__:
     while True:
         getline()
-        #print(_COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM)
-        print("L: "_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B)
-        print("R: "_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
+        print(_COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM)
+        print(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B)
+        print(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
         time.sleep(1)
 for i in range(1000):
    __CONST__MOTOR__ARM__.run(-150)
