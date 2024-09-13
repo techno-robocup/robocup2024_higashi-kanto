@@ -20,8 +20,8 @@ __CONST__SPEED__ = 70 # The default speed to move
 __CONST__WHITE__ = 100
 __CONST__BLACK__ = 50
 __CONST__PROPORTION__ = 1.3
-__CONST__I__ = 0.00056
-__CONST__D__ = 10.5
+__CONST__I__ = 0.00052
+__CONST__D__ = 12
 ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
 __CONST__MOTOR__L__ = Motor(Port.C)
 __CONST__MOTOR__R__ = Motor(Port.D)
@@ -67,21 +67,21 @@ def isgreen_L(r,g,b)->bool:
         _COLORSENSOR_L_HSV = 60 * (g - b) / (max(r,g,b) - min(r,g,b))
         if(_COLORSENSOR_L_HSV < 0):
             _COLORSENSOR_L_HSV += 360
-        if(140 < _COLORSENSOR_L_HSV < 170 and 20 > max(r,g,b) / 255 * 100 > 10 and 33 < _COLORSENSOR_L_G < 70):
+        if(140 < _COLORSENSOR_L_HSV < 150 and 16 > max(r,g,b) / 255 * 100 > 10 and 31 <= _COLORSENSOR_L_G < 50):
             return True
         return False
     if(max(r,g,b) == g and max(r,g,b) - min(r,g,b) != 0):
         _COLORSENSOR_L_HSV = 60 * (b - r) / (max(r,g,b) - min(r,g,b)) + 120
         if(_COLORSENSOR_L_HSV < 0):
             _COLORSENSOR_L_HSV += 360
-        if(140 < _COLORSENSOR_L_HSV < 170 and 20 > max(r,g,b) / 255 * 100 > 10 and 33 < _COLORSENSOR_L_G < 70):
+        if(140 < _COLORSENSOR_L_HSV < 150 and 16 > max(r,g,b) / 255 * 100 > 10 and 31 <= _COLORSENSOR_L_G < 50):
             return True
         return False
     if(max(r,g,b) == b and max(r,g,b) - min(r,g,b) != 0):
         _COLORSENSOR_L_HSV = 60 * (r - g) / (max(r,g,b) - min(r,g,b)) + 240
         if(_COLORSENSOR_L_HSV < 0):
             _COLORSENSOR_L_HSV += 360
-        if(140 < _COLORSENSOR_L_HSV < 170 and 20 > max(r,g,b) / 255 * 100 > 10 and 33 < _COLORSENSOR_L_G < 70):
+        if(140 < _COLORSENSOR_L_HSV < 150 and 16 > max(r,g,b) / 255 * 100 > 10 and 31 <= _COLORSENSOR_L_G < 50):
             return True
         return False
     return False
@@ -91,21 +91,21 @@ def isgreen_R(r,g,b)->bool:
         _COLORSENSOR_R_HSV = 60 * (g - b) / (max(r,g,b) - min(r,g,b))
         if(_COLORSENSOR_R_HSV < 0):
             _COLORSENSOR_R_HSV += 360
-        if(127 < _COLORSENSOR_R_HSV < 132 and 16 > max(r,g,b) / 255 * 100 > 10 and 39 <= _COLORSENSOR_R_G <= 45):
+        if(127 < _COLORSENSOR_R_HSV < 132 and 17 > max(r,g,b) / 255 * 100 > 13 and 39 <= _COLORSENSOR_R_G <= 43):
             return True
         return False
     if(max(r,g,b) == g and max(r,g,b) - min(r,g,b) != 0):
         _COLORSENSOR_R_HSV = 60 * (b - r) / (max(r,g,b) - min(r,g,b)) + 120
         if(_COLORSENSOR_R_HSV < 0):
             _COLORSENSOR_R_HSV += 360
-        if(127 < _COLORSENSOR_R_HSV < 132 and 16 > max(r,g,b) / 255 * 100 > 10 and 39 <= _COLORSENSOR_R_G <= 45):
+        if(127 < _COLORSENSOR_R_HSV < 132 and 17 > max(r,g,b) / 255 * 100 > 13 and 39 <= _COLORSENSOR_R_G <= 43):
             return True
         return False
     if(max(r,g,b) == b and max(r,g,b) - min(r,g,b) != 0):
         _COLORSENSOR_R_HSV = 60 * (r - g) / (max(r,g,b) - min(r,g,b)) + 240
         if(_COLORSENSOR_R_HSV < 0):
             _COLORSENSOR_R_HSV += 360
-        if(127 < _COLORSENSOR_R_HSV < 132 and 16 > max(r,g,b) / 255 * 100 > 10 and 39 < _COLORSENSOR_R_G <= 45):
+        if(128 < _COLORSENSOR_R_HSV < 131 and 17 > max(r,g,b) / 255 * 100 > 14 and 39 <= _COLORSENSOR_R_G <= 43):
             return True
         return False
     return False
@@ -147,11 +147,22 @@ while True:
     if __DEBUG__COLORSENSOR__GREEN__:
         print(_COLORSENSOR_L_HSV,_COLORSENSOR_L_G,_COLORSENSOR_R_HSV,_COLORSENSOR_R_G,max(_COLORSENSOR_L_B,_COLORSENSOR_L_G,_COLORSENSOR_L_R) / 255 * 100,max(_COLORSENSOR_R_B,_COLORSENSOR_R_G,_COLORSENSOR_R_R) / 255 * 100)
         if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
-                print("LEFT GREEN")
-                ev3.speaker.beep()
+            print("LEFT GREEN")
+            ev3.speaker.beep()
         if isgreen_R(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
-                print("RIGHT GREEN")
-                ev3.speaker.beep()
+            print("RIGHT GREEN")
+            ev3.speaker.beep()
+    if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B) and isgreen_R(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
+        ev3.speaker.beep(frequency=440)
+        __CONST__MOTOR__R__.brake()
+        __CONST__MOTOR__L__.brake()
+        __CONST__MOTOR__L__.run(-100)
+        __CONST__MOTOR__R__.run(-100)
+        time.sleep(0.7)
+        getline()
+        __CONST__MOTOR__L__.run(100)
+        __CONST__MOTOR__R__.run(-100)
+        time.sleep(6.3)
     if isgreen_R(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
         if __DEBUG__COLORSENSOR__GREEN__:
             print("RIGHT GREEN")
@@ -162,8 +173,9 @@ while True:
                 __CONST__MOTOR__L__.run(80)
                 __CONST__MOTOR__R__.run(80)
                 getline()
-            __CONST__MOTOR__L__.run(0)
-            __CONST__MOTOR__R__.run(0)
+            __CONST__MOTOR__L__.run(80)
+            __CONST__MOTOR__R__.run(80)
+            time.sleep(0.5)
             while(_COLORSENSOR_R_G >= 20):
                 __CONST__MOTOR__L__.run(80)
                 __CONST__MOTOR__R__.run(-60)
@@ -185,8 +197,9 @@ while True:
                 __CONST__MOTOR__L__.run(80)
                 __CONST__MOTOR__R__.run(80)
                 getline()
-            __CONST__MOTOR__L__.run(0)
-            __CONST__MOTOR__R__.run(0)
+            __CONST__MOTOR__L__.run(80)
+            __CONST__MOTOR__R__.run(80)
+            time.sleep(0.5)
             while(_COLORSENSOR_L_G >= 20):
                 __CONST__MOTOR__L__.run(-80)
                 __CONST__MOTOR__R__.run(60)
@@ -198,6 +211,7 @@ while True:
             __CONST__MOTOR__L__.run(-80)
             __CONST__MOTOR__R__.run(60)
             time.sleep(0.4)
+    """
     if(abs(_D_SUM) > 15):
         __CONST__MOTOR__L__.run(80)
         __CONST__MOTOR__R__.run(80)
@@ -213,7 +227,7 @@ while True:
             __CONST__MOTOR__L__.run(80)
             __CONST__MOTOR__R__.run(80)
             time.sleep(2)
-        else if(right_ungle == 0):
+        elif(right_ungle == 0):
             while(_COLORSENSOR_L_G >= 20):
                 __CONST__MOTOR__L__.run(-80)
                 __CONST__MOTOR__R__.run(-80)
@@ -245,17 +259,7 @@ while True:
             __CONST__MOTOR__L__.run(80)
             __CONST__MOTOR__R__.run(-60)
             time.sleep(0.4)
-    if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B) and isgreen_R(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
-        ev3.speaker.beep(frequency=440)
-        __CONST__MOTOR__R__.brake()
-        __CONST__MOTOR__L__.brake()
-        __CONST__MOTOR__L__.run(-100)
-        __CONST__MOTOR__R__.run(-100)
-        time.sleep(0.7)
-        getline()
-        __CONST__MOTOR__L__.run(100)
-        __CONST__MOTOR__R__.run(-100)
-        time.sleep(6.3)
+    """
     if isred_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B) and isred_R(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B):
         ev3.speaker.beep(frequency=550)
         if __DEBUG__:
