@@ -15,14 +15,14 @@ import time
 __DEBUG__ = False # Turn it on if you want to print debug info into console
 __DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
 __DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
-__DEBUG__COLORSENSOR__GREEN__ = True # Turn on if you want to check whether it is judged as green.
+__DEBUG__COLORSENSOR__GREEN__ = False # Turn on if you want to check whether it is judged as green.
 __CONST__CLOCK__ = 1 # Define the clock speed
 __CONST__SPEED__ = 70 # The default speed to move
 __CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
 __CONST__BLACK__ = 50 # The threshold for recognizing as BLACK
 __CONST__PROPORTION__ = 1.3
 __CONST__I__ = 0.00056
-__CONST__D__ = 10
+__CONST__D__ = 10.5
 ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
 __CONST__MOTOR__L__ = Motor(Port.C)
 __CONST__MOTOR__R__ = Motor(Port.D)
@@ -142,7 +142,8 @@ if __DEBUG__COLORSENSOR__:
         print("R: ",_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
         time.sleep(1)
 for i in range(1000):
-   __CONST__MOTOR__ARM__.run(-150)
+   __CONST__MOTOR__ARM__.run(-200)
+right_ungle = 0 # 0 means left side is right ungle.
 while True:
     if __DEBUG__:
         print("D: ",_D_SUM)
@@ -177,12 +178,62 @@ while True:
             while(_COLORSENSOR_R_G <= 90):
                 __CONST__MOTOR__L__.run(80)
                 __CONST__MOTOR__R__.run(-80)
-                getline()     
+                getline()
+            __CONST__MOTOR__L__.run(80)
+            __CONST__MOTOR__R__.run(-80)
+            time.sleep(0.4)    
     if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
         if __DEBUG__COLORSENSOR__GREEN__:
             print("LEFT GREEN")
         ev3.speaker.beep()
         time.sleep(0.5)
+        if(not(__DEBUG__COLORSENSOR__GREEN__)):
+            while(_COLORSENSOR_L_G <= 80):
+                __CONST__MOTOR__L__.run(80)
+                __CONST__MOTOR__R__.run(80)
+                getline()
+            __CONST__MOTOR__L__.run(0)
+            __CONST__MOTOR__R__.run(0)
+            while(_COLORSENSOR_L_G >= 20):
+                __CONST__MOTOR__L__.run(-80)
+                __CONST__MOTOR__R__.run(80)
+                getline()
+            while(_COLORSENSOR_L_G <= 90):
+                __CONST__MOTOR__L__.run(-80)
+                __CONST__MOTOR__R__.run(80)
+                getline()
+            __CONST__MOTOR__L__.run(-80)
+            __CONST__MOTOR__R__.run(80)
+            time.sleep(0.4)
+    if(abs(_D_SUM) > 15):
+        __CONST__MOTOR__L__.run(80)
+        __CONST__MOTOR__R__.run(80)
+        time.sleep(0.7)
+        if(_COLORSENSOR_L_G <= 20):
+            right_ungle = 0
+        else if(_COLORSENSOR_R_G <= 20):
+            right_ungle = 1
+        __CONST__MOTOR__L__.run(80)
+        __CONST__MOTOR__R__.run(80)
+        time.sleep(0.7)
+        if(isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B) or isgreen_R(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B)):
+            __CONST__MOTOR__L__.run(80)
+            __CONST__MOTOR__R__.run(80)
+            time.sleep(2)
+        else if(right_ungle == 0):
+            __CONST__MOTOR__L__.run(-80)
+            __CONST__MOTOR__R__.run(-80)
+            time.sleep(0.7)
+            __CONST__MOTOR__L__.run(-80)
+            __CONST__MOTOR__R__.run(80)
+            time.sleep(3)
+        else:
+            __CONST__MOTOR__L__.run(-80)
+            __CONST__MOTOR__R__.run(-80)
+            time.sleep(0.7)
+            __CONST__MOTOR__L__.run(80)
+            __CONST__MOTOR__R__.run(-80)
+            time.sleep(3)
     if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B) and isgreen_R(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
         ev3.speaker.beep(frequency=440)
         __CONST__MOTOR__R__.brake()
