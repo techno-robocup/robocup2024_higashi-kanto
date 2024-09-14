@@ -167,50 +167,45 @@ while True:
         if __DEBUG__COLORSENSOR__GREEN__:
             print("RIGHT GREEN")
         ev3.speaker.beep()
+        __CONST__MOTOR__L__.brake()
+        __CONST__MOTOR__R__.brake()
         time.sleep(0.5)
         if(not(__DEBUG__COLORSENSOR__GREEN__)):
-            while(_COLORSENSOR_R_G <= 80):
-                __CONST__MOTOR__L__.run(80)
-                __CONST__MOTOR__R__.run(80)
-                getline()
             __CONST__MOTOR__L__.run(80)
             __CONST__MOTOR__R__.run(80)
+            getline()
             time.sleep(0.5)
-            while(_COLORSENSOR_R_G >= 20):
-                __CONST__MOTOR__L__.run(80)
-                __CONST__MOTOR__R__.run(-60)
-                getline()
-            while(_COLORSENSOR_R_G <= 90):
-                __CONST__MOTOR__L__.run(80)
-                __CONST__MOTOR__R__.run(-60)
-                getline()
+            # while(_COLORSENSOR_R_G >= 20):
+            #     __CONST__MOTOR__L__.run(80)
+            #     __CONST__MOTOR__R__.run(-60)
+            #     getline()
+            # while(_COLORSENSOR_R_G <= 90):
+            #     __CONST__MOTOR__L__.run(80)
+            #     __CONST__MOTOR__R__.run(-60)
+            getline()
             __CONST__MOTOR__L__.run(80)
             __CONST__MOTOR__R__.run(-60)
-            time.sleep(0.4)    
+            time.sleep(1)  
     if isgreen_L(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B):
         if __DEBUG__COLORSENSOR__GREEN__:
             print("LEFT GREEN")
         ev3.speaker.beep()
         time.sleep(0.5)
-        if(not(__DEBUG__COLORSENSOR__GREEN__)):
-            while(_COLORSENSOR_L_G <= 80):
-                __CONST__MOTOR__L__.run(80)
-                __CONST__MOTOR__R__.run(80)
-                getline()
-            __CONST__MOTOR__L__.run(80)
-            __CONST__MOTOR__R__.run(80)
-            time.sleep(0.5)
-            while(_COLORSENSOR_L_G >= 20):
-                __CONST__MOTOR__L__.run(-80)
-                __CONST__MOTOR__R__.run(60)
-                getline()
-            while(_COLORSENSOR_L_G <= 90):
-                __CONST__MOTOR__L__.run(-80)
-                __CONST__MOTOR__R__.run(60)
-                getline()
-            __CONST__MOTOR__L__.run(-80)
-            __CONST__MOTOR__R__.run(60)
-            time.sleep(0.4)
+        __CONST__MOTOR__L__.run(80)
+        __CONST__MOTOR__R__.run(80)
+        getline()
+        time.sleep(0.5)
+            # while(_COLORSENSOR_L_G >= 20):
+            #     __CONST__MOTOR__L__.run(-80)
+            #     __CONST__MOTOR__R__.run(60)
+            #     getline()
+            # while(_COLORSENSOR_L_G <= 90):
+            #     __CONST__MOTOR__L__.run(-80)
+            #     __CONST__MOTOR__R__.run(60)
+        getline()
+        __CONST__MOTOR__L__.run(-80)
+        __CONST__MOTOR__R__.run(60)
+        time.sleep(1)
     """
     if(abs(_D_SUM) > 15):
         __CONST__MOTOR__L__.run(80)
