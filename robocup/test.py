@@ -42,6 +42,7 @@ COLORRHUE = 0
 ISUM = 0
 DSUM = 0
 
+
 def calc_hue(r: int, g: int, b: int) -> bool:
     if r == g and g == b:
         return 0
@@ -55,7 +56,7 @@ def calc_hue(r: int, g: int, b: int) -> bool:
         return 60 * ((b - r) / (maxnum - minnum)) + 120
 
 
-def getline()->None:
+def getline() -> None:
     global COLORL, COLORR, COLORLR, COLORLG, COLORLB, COLORRR, COLORRG, COLORRB, COLORLSUM, COLORRSUM, COLORLHUE, COLORRHUE
     COLORLSUMBEFORE = COLORLSUM
     COLORRSUMBEFORE = COLORRSUM
@@ -66,5 +67,21 @@ def getline()->None:
     COLORLHUE = calc_hue(COLORLR, COLORLG, COLORLB)
     COLORRHUE = calc_hue(COLORRR, COLORRG, COLORRB)
     ISUM = COLORLSUM - COLORRSUM
-    DSUM = 
+    DSUM = (COLORLSUMBEFORE - COLORRSUMBEFORE) - (COLORLSUM - COLORRSUM)
+    return None
 
+
+def isgreen_L(r: int, g: int, b: int):
+    global COLORLHUE, COLORLSUM
+    if max(r, g, b) == min(r, g, b):
+        return False
+    if 140 < COLORLHUE < 150 and 50 <= COLORLSUM <= 200:
+        return True
+
+
+def isgreen_R(r: int, g: int, b: int):
+    global COLORRHUE, COLORRSUM
+    if max(r, g, b) == min(r, g, b):
+        return False
+    if 127 < COLORRHUE < 132 and 50 <= COLORRSUM <= 200:
+        return True
