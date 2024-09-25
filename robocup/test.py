@@ -85,3 +85,8 @@ def isgreen_R(r: int, g: int, b: int):
         return False
     if 127 < COLORRHUE < 132 and 50 <= COLORRSUM <= 200:
         return True
+
+while True:
+    MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) + ISUM * DEFAULT_I + DSUM * DEFAULT_D)
+    MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) - ISUM * DEFAULT_I - DSUM * DEFAULT_D)
+
