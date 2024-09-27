@@ -6,103 +6,66 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-
-DEBUGPRINT = True
-DEBUG_MOTOR = False
-DEBUG_COLORSENSOR = False
-
-DEFAULT_SPEED = 90
-DEFAULT_PROPORTION = 1.0
-DEFAULT_I = 0.00052
-DEFAULT_D = 12
-WHITE_THRESHOLD = 100
-BLACK_THRESHOLD = 50
-
-EV3 = EV3Brick()
-MOTORL = Motor(Port.C)
-MOTORR = Motor(Port.D)
-MOTORARM = Motor(Port.B)
-COLORL = ColorSensor(Port.S1)
-COLORR = ColorSensor(Port.S2)
-TOUCHL = TouchSensor(Port.S4)
-TOUCHR = TouchSensor(Port.S3)
-
-COLORLR = 0
-COLORLG = 0
-COLORLB = 0
-COLORRR = 0
-COLORRG = 0
-COLORRB = 0
-COLORLSUM = 0
-COLORRSUM = 0
-COLORLSUMBEFORE = 0
-COLORRSUMBEFORE = 0
-COLORLHUE = 0
-COLORRHUE = 0
-ISUM = 0
-DSUM = 0
-
-
-def calc_hue(r: int, g: int, b: int) -> bool:
-    if r == g and g == b:
-        return 0
-    maxnum = max(r, g, b)
-    minnum = min(r, g, b)
-    if maxnum == b:
-        return 60 * ((r - g) / (maxnum - minnum)) + 240
-    if maxnum == r:
-        return 60 * ((g - b) / (maxnum - minnum))
-    if maxnum == g:
-        return 60 * ((b - r) / (maxnum - minnum)) + 120
-
-
-def getline() -> None:
-    global COLORL, COLORR, COLORLR, COLORLG, COLORLB, COLORRR, COLORRG, COLORRB, COLORLSUM, COLORRSUM, COLORLHUE, COLORRHUE
-    COLORLSUMBEFORE = COLORLSUM
-    COLORRSUMBEFORE = COLORRSUM
-    COLORLR, COLORLG, COLORLB = COLORL.rgb()
-    COLORRR, COLORRG, COLORRB = COLORR.rgb()
-    COLORLSUM = COLORLR + COLORLG + COLORLB
-    COLORRSUM = COLORRR + COLORRG + COLORRB
-    COLORLHUE = calc_hue(COLORLR, COLORLG, COLORLB)
-    COLORRHUE = calc_hue(COLORRR, COLORRG, COLORRB)
-    ISUM = COLORLSUM - COLORRSUM
-    DSUM = (COLORLSUMBEFORE - COLORRSUMBEFORE) - (COLORLSUM - COLORRSUM)
-    return None
-
-
-def isgreen_L(r: int, g: int, b: int)->bool:
-    global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
-    if max(COLORLR, COLORLG, COLORLB) == min(COLORLR, COLORLG, COLORB):
-        return False
-    if 140 < COLORLHUE < 150 and 50 <= COLORLSUM <= 200:
-        return True
-
-
-def isgreen_R()->bool:
-    global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
-    if max(COLORRR, COLORRG, COLORRB) == min(COLORRR, COLORRG, COLORRB):
-        return False
-    if 127 < COLORRHUE < 132 and 50 <= COLORRSUM <= 200:
-        return True
-
-def isblack_L()->bool:
-    global COLORLSUM
-    if COLORLSUM <= 70:
-        return True
-    return False
-
-def isblack_R()->bool:
-    global COLORRSUM
-    if COLORRSUM<=70:
-        return True
-    return False
-
+import time
+# FROM UNDER THIS LINE, 
+# DO NOT CHANGE THE NAME THAT STARTS FROM '__'
+# DO NOT DELETE THE VARIABLE THAT STARTS FROM '_'
+# PUT '__CONST__' BEFORE AN CONSTANT VARIABLE
+# IF YOU ARE MAKING A TEMPORARY VARIABLE, START THE VARIABLE'S NAME FROM AN small alphabet
+__DEBUG__ = True # Turn it on if you want to print debug info into console
+__DEBUG__MOTOR__ = False # Turn on if you want to check how the motor is working
+__DEBUG__COLORSENSOR__ = False # Turn on if you want to print the colorsensor's data in to console
+#__CONST__CLOCK__ = 3 # Define the clock speed
+__CONST__SPEED__ = 200   # The default speed to move
+__CONST__WHITE__ = 100 # The threshold for recognizing as WHITE
+__CONST__PROPORTION__ = 2
+ev3 = EV3Brick() #<!-- DO NOT CHANGE THE VARIABLE'S NAME --!>
+__CONST__MOTOR__L__ = Motor(Port.A)
+__CONST__MOTOR__R__ = Motor(Port.D)
+__CONST__MOTOR__ARM__ = Motor(Port.B)
+__CONST__COLORSENSOR__L__ = ColorSensor(Port.S1)
+__CONST__COLORSENSOR__R__ = ColorSensor(Port.S2)
+__CONST__TOUCHSENSOR_L = TouchSensor(Port.S4)
+__CONST__TOUCHSENSOR_R = TouchSensor(Port.S3)
+_COLORSENSOR_L_R = 0
+_COLORSENSOR_L_G = 0
+_COLORSENSOR_L_B = 0
+_COLORSENSOR_R_R = 0
+_COLORSENSOR_R_G = 0
+_COLORSENSOR_R_B = 0
+_COLORSENSOR_L_SUM = 0
+_COLORSENSOR_R_SUM = 0
+# Write your program here.
+def getline():
+    global __DEBUG__, __DEBUG__MOTOR__, __DEBUG__COLORSENSOR__, __CONST__CLOCK__, __CONST__SPEED__, __CONST__WHITE__, ev3, __CONST__MOTOR__L__, __CONST__MOTOR__R__, __CONST__MOTOR__ARM__, __CONST__COLORSENSOR__L__, __CONST__COLORSENSOR__R__, _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B, _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B, _COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM, __CONST__PROPORTION__
+    _COLORSENSOR_L_R, _COLORSENSOR_L_G, _COLORSENSOR_L_B = __CONST__COLORSENSOR__L__.rgb()
+    _COLORSENSOR_R_R, _COLORSENSOR_R_G, _COLORSENSOR_R_B = __CONST__COLORSENSOR__R__.rgb()
+    _COLORSENSOR_L_SUM = _COLORSENSOR_L_R + _COLORSENSOR_L_G + _COLORSENSOR_L_B
+    _COLORSENSOR_R_SUM = _COLORSENSOR_R_R + _COLORSENSOR_R_G + _COLORSENSOR_R_B
+ev3.speaker.beep()
+# <!-- DEBUG MOTOR -->
+if __DEBUG__MOTOR__:
+    while True:
+        for i in range(1000):
+            __CONST__MOTOR__L__.run(1000)
+            __CONST__MOTOR__R__.run(1000)
+        for i in range(1000):
+            __CONST__MOTOR__L__.run(-1000)
+            __CONST__MOTOR__R__.run(-1000)
+# <!-- DEBUG COLORSENSOR -->
+if __DEBUG__COLORSENSOR__:
+    while True:
+        getline()
+        print(_COLORSENSOR_L_SUM,_COLORSENSOR_R_SUM)
+        print(_COLORSENSOR_L_R,_COLORSENSOR_L_G,_COLORSENSOR_L_B)
+        print(_COLORSENSOR_R_R,_COLORSENSOR_R_G,_COLORSENSOR_R_B)
+        time.sleep(1)
+for i in range(1000):
+    __CONST__MOTOR__ARM__.run(-100)
 while True:
+    if __DEBUG__:
+        print(_COLORSENSOR_L_SUM, _COLORSENSOR_R_SUM)
+        print(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM, _COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM)
     getline()
-    MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) + ISUM * DEFAULT_I + DSUM * DEFAULT_D)
-    MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) - ISUM * DEFAULT_I - DSUM * DEFAULT_D)
-    if isblack_L():
-        EV3.speaker.beep()
-    if isblack_R():
-        EV3.speaker.beep(frequency=1000)
+    __CONST__MOTOR__L__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_L_SUM - _COLORSENSOR_R_SUM))
+    __CONST__MOTOR__R__.run(__CONST__SPEED__ + __CONST__PROPORTION__*(_COLORSENSOR_R_SUM - _COLORSENSOR_L_SUM))
