@@ -9,7 +9,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 DEBUGPRINT = True
 DEBUG_MOTOR = False
-DEBUG_COLORSENSOR = False+
+DEBUG_COLORSENSOR = False
 
 DEFAULT_SPEED = 90
 DEFAULT_PROPORTION = 1.0
@@ -70,31 +70,36 @@ def getline() -> None:
     DSUM = (COLORLSUMBEFORE - COLORRSUMBEFORE) - (COLORLSUM - COLORRSUM)
     return None
 
-def isblack_L()->bool:
+
+def isblack_L() -> bool:
     global COLORLSUM
     if COLORLSUM <= 30:
         return True
     return False
 
-def isblack_R()->bool:
+
+def isblack_R() -> bool:
     global COLORRSUM
-    if COLORRSUM<=30:
+    if COLORRSUM <= 30:
         return True
     return False
 
-def iswhite_L()->bool:
+
+def iswhite_L() -> bool:
     global COLORLSUM
-    if COLORLSUM>=200:
+    if COLORLSUM >= 200:
         return True
     return False
 
-def iswhite_R()->bool:
+
+def iswhite_R() -> bool:
     global COLORRSUM
-    if COLORRSUM>=200:
+    if COLORRSUM >= 200:
         return True
     return False
 
-def isgreen_L(r: int, g: int, b: int)->bool:
+
+def isgreen_L(r: int, g: int, b: int) -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
     if max(COLORLR, COLORLG, COLORLB) == min(COLORLR, COLORLG, COLORB):
         return False
@@ -102,12 +107,13 @@ def isgreen_L(r: int, g: int, b: int)->bool:
         return True
 
 
-def isgreen_R()->bool:
+def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
     if max(COLORRR, COLORRG, COLORRB) == min(COLORRR, COLORRG, COLORRB):
         return False
     if 127 < COLORRHUE < 132 and not isblack_R() and not iswhite_R():
         return True
+
 
 if DEBUG_COLORSENSOR:
     while True:
@@ -117,9 +123,31 @@ if DEBUG_COLORSENSOR:
 
 while True:
     getline()
-    MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) + ISUM * DEFAULT_I + DSUM * DEFAULT_D)
-    MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) - ISUM * DEFAULT_I - DSUM * DEFAULT_D)
+    MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) +
+               ISUM * DEFAULT_I + DSUM * DEFAULT_D)
+    MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) -
+               ISUM * DEFAULT_I - DSUM * DEFAULT_D)
     if isblack_L():
         EV3.speaker.beep()
+        MOTORL.brake()
+        MOTORR.brake()
+        while isblack_L():
+            getline()
+            MOTORL.run(150)
+            MOTORR.run(150)
+        while not isblack_R():
+            getline()
+            MOTORL.run(150)
+            MOTORR.run(-150)
     if isblack_R():
         EV3.speaker.beep(frequency=1000)
+        MOTORL.brake()
+        MOTORR.brake()
+        while isblack_R():
+            getline()
+            MOTORL.run(150)
+            MOTORR.run(150)
+        while not isblack_L():
+            getline()
+            MOTORL.run(-150)
+            MOTORR.run(150)
