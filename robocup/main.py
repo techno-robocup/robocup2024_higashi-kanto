@@ -1,4 +1,5 @@
 #!/usr/bin/env pybricks-micropython
+
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -6,12 +7,13 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
+import time
 
 DEBUGPRINT = True
 DEBUG_MOTOR = False
 DEBUG_COLORSENSOR = False
 
-DEFAULT_SPEED = 90
+DEFAULT_SPEED = 120
 DEFAULT_PROPORTION = 1.0
 DEFAULT_I = 0.00052
 DEFAULT_D = 12
@@ -99,7 +101,7 @@ def iswhite_R() -> bool:
     return False
 
 
-def isgreen_L(r: int, g: int, b: int) -> bool:
+def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
     if max(COLORLR, COLORLG, COLORLB) == min(COLORLR, COLORLG, COLORB):
         return False
@@ -121,33 +123,46 @@ if DEBUG_COLORSENSOR:
         print("L:", COLORLSUM)
         print("R:", COLORRSUM)
 
+cnt = 0
+
 while True:
+    cnt+=1
+    if DEBUGPRINT:
+        print(cnt)
     getline()
     MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) +
                ISUM * DEFAULT_I + DSUM * DEFAULT_D)
     MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) -
                ISUM * DEFAULT_I - DSUM * DEFAULT_D)
-    if isblack_L():
+    if isblack_L() and cnt >= 20 and not isblack_R():
         EV3.speaker.beep()
         MOTORL.brake()
         MOTORR.brake()
         while isblack_L():
             getline()
-            MOTORL.run(150)
-            MOTORR.run(150)
+            MOTORL.run(200)
+            MOTORR.run(200)
         while not isblack_R():
             getline()
-            MOTORL.run(150)
-            MOTORR.run(-150)
-    if isblack_R():
+            MOTORL.run(-200)
+            MOTORR.run(200)
+        MOTORL.run(200)
+        MOTORR.run(-200)
+        time.sleep(0.3)
+        cnt=0
+    if isblack_R() and cnt >= 20 and not isblack_L():
         EV3.speaker.beep(frequency=1000)
         MOTORL.brake()
         MOTORR.brake()
         while isblack_R():
             getline()
-            MOTORL.run(150)
-            MOTORR.run(150)
+            MOTORL.run(200)
+            MOTORR.run(200)
         while not isblack_L():
             getline()
-            MOTORL.run(-150)
-            MOTORR.run(150)
+            MOTORL.run(200)
+            MOTORR.run(-200)
+        MOTORL.run(-200)
+        MOTORR.run(200)
+        time.sleep(0.3)
+        cnt=0
