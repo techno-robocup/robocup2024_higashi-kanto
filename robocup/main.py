@@ -166,3 +166,67 @@ while True:
         MOTORR.run(200)
         time.sleep(0.3)
         cnt=0
+    if isgreen_L() and cnt >=20 and not isgreen_R():
+        EV3.speaker.beep(frequency=1500)
+        MOTORL.brake()
+        MOTORR.brake()
+        while isgreen_L():
+            getline()
+            MOTORL.run(-200)
+            MOTORR.run(-200)
+        MOTORL.run(-200)
+        MOTORR.run(-200)
+        time.sleep(0.2)
+        if iswhite_L():
+            MOTORL.run(200)
+            MOTORR.run(200)
+            time.sleep(0.4)
+            while not iswhite_L():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(200)
+            while iswhite_L():
+                getline()
+                MOTORL.run(-200)
+                MOTORR.run(200)
+            while isblack_L():
+                getline()
+                MOTORL.run(-200)
+                MOTORR.run(200)
+        else:
+            while not iswhite_L():
+                MOTORL.run(200)
+                MOTORR.run(200)
+        cnt=0
+    if isgreen_R() and cnt >= 20 and not isgreen_L():
+        EV3.speaker.beep(frequency=2000)
+        MOTORL.brake()
+        MOTORR.brake()
+        while isgreen_R():
+            getline()
+            MOTORL.run(-200)
+            MOTORR.run(-200)
+        MOTORL.run(-200)
+        MOTORR.run(-200)
+        time.sleep(0.2)
+        if iswhite_R():
+            MOTORL.run(200)
+            MOTORR.run(200)
+            time.sleep(0.4)
+            while not iswhite_R():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(200)
+            while iswhite_R():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(-200)
+            while isblack_R():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(-200)
+        else:
+            while not iswhite_R():
+                MOTORL.run(200)
+                MOTORR.run(200)
+
