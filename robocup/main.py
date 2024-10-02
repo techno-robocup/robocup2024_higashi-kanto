@@ -14,7 +14,7 @@ DEBUG_MOTOR = False
 DEBUG_COLORSENSOR = False
 
 DEFAULT_SPEED = 120
-DEFAULT_PROPORTION = 1.0
+DEFAULT_PROPORTION = 0.8
 DEFAULT_I = 0.00052
 DEFAULT_D = 12
 WHITE_THRESHOLD = 100
@@ -103,7 +103,7 @@ def iswhite_R() -> bool:
 
 def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
-    if max(COLORLR, COLORLG, COLORLB) == min(COLORLR, COLORLG, COLORB):
+    if max(COLORLR, COLORLG, COLORLB) == min(COLORLR, COLORLG, COLORLB):
         return False
     if 140 < COLORLHUE < 150 and not isblack_L() and not iswhite_L():
         return True
@@ -176,11 +176,15 @@ while True:
             MOTORR.run(-200)
         MOTORL.run(-200)
         MOTORR.run(-200)
-        time.sleep(0.2)
-        if iswhite_L():
+        time.sleep(0.4)
+        MOTORL.brake()
+        MOTORR.brake()
+        time.sleep(1)
+        getline()
+        if not isblack_L():
             MOTORL.run(200)
             MOTORR.run(200)
-            time.sleep(0.4)
+            time.sleep(0.2)
             while not iswhite_L():
                 getline()
                 MOTORL.run(200)
@@ -195,6 +199,7 @@ while True:
                 MOTORR.run(200)
         else:
             while not iswhite_L():
+                getline()
                 MOTORL.run(200)
                 MOTORR.run(200)
         cnt=0
@@ -208,11 +213,15 @@ while True:
             MOTORR.run(-200)
         MOTORL.run(-200)
         MOTORR.run(-200)
-        time.sleep(0.2)
-        if iswhite_R():
+        time.sleep(0.4)
+        MOTORL.brake()
+        MOTORR.brake()
+        time.sleep(1)
+        getline()
+        if not isblack_R():
             MOTORL.run(200)
             MOTORR.run(200)
-            time.sleep(0.4)
+            time.sleep(0.2)
             while not iswhite_R():
                 getline()
                 MOTORL.run(200)
@@ -227,6 +236,7 @@ while True:
                 MOTORR.run(-200)
         else:
             while not iswhite_R():
+                getline()
                 MOTORL.run(200)
                 MOTORR.run(200)
 
