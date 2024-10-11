@@ -14,7 +14,7 @@ DEBUG_MOTOR = False
 DEBUG_COLORSENSOR = False
 
 DEFAULT_SPEED = 120
-DEFAULT_PROPORTION = 0.8
+DEFAULT_PROPORTION = 1
 DEFAULT_I = 0.00052
 DEFAULT_D = 12
 WHITE_THRESHOLD = 100
@@ -45,7 +45,7 @@ ISUM = 0
 DSUM = 0
 
 
-def calc_hue(r: int, g: int, b: int) -> bool:
+def calc_hue(r: int, g: int, b: int) -> int:
     if r == g and g == b:
         return 0
     maxnum = max(r, g, b)
@@ -56,7 +56,6 @@ def calc_hue(r: int, g: int, b: int) -> bool:
         return 60 * ((g - b) / (maxnum - minnum))
     if maxnum == g:
         return 60 * ((b - r) / (maxnum - minnum)) + 120
-
 
 def getline() -> None:
     global COLORL, COLORR, COLORLR, COLORLG, COLORLB, COLORRR, COLORRG, COLORRB, COLORLSUM, COLORRSUM, COLORLHUE, COLORRHUE
@@ -113,7 +112,7 @@ def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
     if max(COLORRR, COLORRG, COLORRB) == min(COLORRR, COLORRG, COLORRB):
         return False
-    if 127 < COLORRHUE < 132 and not isblack_R() and not iswhite_R():
+    if 125 < COLORRHUE < 130 and not isblack_R() and not iswhite_R():
         return True
 
 
@@ -122,22 +121,27 @@ if DEBUG_COLORSENSOR:
         getline()
         print("L:", COLORLSUM)
         print("R:", COLORRSUM)
+        print("LHUE:", COLORLHUE)
+        print("RHUE:", COLORRHUE)
+        time.sleep(0.1)
+
 
 cnt = 0
 
 while True:
     cnt+=1
-    if DEBUGPRINT:
-        print(cnt)
     getline()
+    if DEBUGPRINT:
+        print("L:", COLORLSUM)
+        print("R:", COLORRSUM)
+        print("LHUE:", COLORLHUE)
+        print("RHUE:", COLORRHUE)
     MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) +
                ISUM * DEFAULT_I + DSUM * DEFAULT_D)
     MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) -
                ISUM * DEFAULT_I - DSUM * DEFAULT_D)
     if isblack_L() and cnt >= 20 and not isblack_R():
         EV3.speaker.beep()
-        MOTORL.brake()
-        MOTORR.brake()
         while isblack_L():
             getline()
             MOTORL.run(200)
@@ -148,12 +152,9 @@ while True:
             MOTORR.run(200)
         MOTORL.run(200)
         MOTORR.run(-200)
-        time.sleep(0.3)
         cnt=0
     if isblack_R() and cnt >= 20 and not isblack_L():
         EV3.speaker.beep(frequency=1000)
-        MOTORL.brake()
-        MOTORR.brake()
         while isblack_R():
             getline()
             MOTORL.run(200)
@@ -162,7 +163,56 @@ while True:
             getline()
             MOTORL.run(200)
             MOTORR.run(-200)
-        MOTORL.run(-200)
-        MOTORR.run(200)
-        time.sleep(0.3)
         cnt=0
+    if isgreen_L() and cnt >= 20 and not isgreen_R():
+        EV3.speaker.beep(frequency=1000)
+        MOTORL.brake()
+        MOTORR.brake()
+        getline()
+        if not isgreen_L():
+            continue
+        while not isblack_L() and not iswhite_L():
+            getline()
+            MOTORL.run(200)
+            MOTORR.run(200)
+        if isblack_L():
+            while isblack_L():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(200)
+            while not isblack_L():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(-200)
+            while isblack_L():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(-200)
+        else:
+            cnt=0
+    if isgreen_R() and cnt >= 20 and not isgreen_L():
+        EV3.speaker.beep(frequency=2000)
+        MOTORL.brake()
+        MOTORR.brake()
+        getline()
+        if not isgreen_R():
+            continue
+        while not isblack_R() and not iswhite_R():
+            getline()
+            MOTORL.run(200)
+            MOTORR.run(200)
+        if isblack_R():
+            while isblack_R():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(200)
+            while not isblack_R():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(-200)
+            while isblack_R():
+                getline()
+                MOTORL.run(200)
+                MOTORR.run(-200)
+        else:
+            cnt=0
