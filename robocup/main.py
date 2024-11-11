@@ -102,7 +102,7 @@ def iswhite_R() -> bool:
 
 def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
-    if max(COLORLR, COLORLG, COLORLB) == min(COLORLR, COLORLG, COLORLB):
+    if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 40:
         return False
     if 140 < COLORLHUE < 150 and not isblack_L() and not iswhite_L():
         return True
@@ -110,11 +110,53 @@ def isgreen_L() -> bool:
 
 def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
-    if max(COLORRR, COLORRG, COLORRB) == min(COLORRR, COLORRG, COLORRB):
+    if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 40:
         return False
     if 125 < COLORRHUE < 130 and not isblack_R() and not iswhite_R():
         return True
 
+def avoid():
+    global TOUCHL, TOUCHR, MOTORL, MOTORR
+    LBLACK = RBLACK = False
+    MOTORL.run(200)
+    MOTORR.run(-200)
+    time.sleep(1)
+    while True:
+        getline()
+        if TOUCHL.pressed():
+            MOTORL.run(200)
+            MOTORR.run(-200)
+        else:
+            MOTORL.run(50)
+            MOTORR.run(200)
+        if isblack_L():
+            LBLACK = True
+        if isblack_R():
+            RBLACK = True
+        if LBLACK and RBLACK:
+            break
+    while not isblack_R():
+        getline()
+        MOTORL.run(200)
+        MOTORR.run(-200)
+    while isblack_R():
+        getline()
+        MOTORL.run(200)
+        MOTORR.run(-200)
+    
+def uturn():
+    global MOTORL, MOTORR
+    MOTORL.run(200)
+    MOTORR.run(-200)
+    time.sleep(0.5)
+    while not isblack_R():
+        getline()
+        MOTORL.run(200)
+        MOTORR.run(-200)
+    while isblack_R():
+        getline()
+        MOTORL.run(200)
+        MOTORR.run(-200)
 
 if DEBUG_COLORSENSOR:
     while True:
@@ -132,10 +174,8 @@ while True:
     cnt+=1
     getline()
     if DEBUGPRINT:
-        print("L:", COLORLSUM)
-        print("R:", COLORRSUM)
-        print("LHUE:", COLORLHUE)
-        print("RHUE:", COLORRHUE)
+        print(COLORLR, COLORLG, COLORLB)
+        print(COLORRR, COLORRG, COLORRB)
     MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) +
                ISUM * DEFAULT_I + DSUM * DEFAULT_D)
     MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) -
@@ -152,6 +192,7 @@ while True:
             MOTORR.run(200)
         MOTORL.run(200)
         MOTORR.run(-200)
+        time.sleep(0.3)
         cnt=0
     if isblack_R() and cnt >= 20 and not isblack_L():
         EV3.speaker.beep(frequency=1000)
@@ -163,14 +204,25 @@ while True:
             getline()
             MOTORL.run(200)
             MOTORR.run(-200)
+        MOTORL.run(-200)
+        MOTORR.run(200)
+        time.sleep(0.3)
         cnt=0
-    if isgreen_L() and cnt >= 20 and not isgreen_R():
+    if isgreen_L() and cnt >= 40 and not isgreen_R():
+        print("isleft")
         EV3.speaker.beep(frequency=1000)
         MOTORL.brake()
         MOTORR.brake()
+        time.sleep(1)
         getline()
-        if not isgreen_L():
+        if isgreen_R():
+            uturn()
             continue
+        # if not isgreen_L():
+        #     print("isleftcancel")
+        #     print(COLORLR, COLORLG, COLORLB)
+        #     print(COLORRR, COLORRG, COLORRB)
+        #     continue
         while not isblack_L() and not iswhite_L():
             getline()
             MOTORL.run(200)
@@ -190,13 +242,21 @@ while True:
                 MOTORR.run(-200)
         else:
             cnt=0
-    if isgreen_R() and cnt >= 20 and not isgreen_L():
+    if isgreen_R() and cnt >= 40 and not isgreen_L():
+        print("isright")
         EV3.speaker.beep(frequency=2000)
         MOTORL.brake()
         MOTORR.brake()
+        time.sleep(1)
         getline()
-        if not isgreen_R():
+        if isgreen_L():
+            uturn()
             continue
+            # if not isgreen_R():
+            #     print("isrightcancel")
+            #     print(COLORLR, COLORLG, COLORLB)
+            #     print(COLORRR, COLORRG, COLORRB)
+            #     continue
         while not isblack_R() and not iswhite_R():
             getline()
             MOTORL.run(200)
@@ -216,3 +276,9 @@ while True:
                 MOTORR.run(-200)
         else:
             cnt=0
+    if TOUCHL.pressed() and TOUCHR.pressed():
+        EV3.speaker.beep(frequency=1000)
+        avoid()
+    if isgreen_L() and isgreen_R():
+        EV3.speaker.beep(frequency=4000)
+        uturn()
