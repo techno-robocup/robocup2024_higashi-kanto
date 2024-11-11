@@ -57,6 +57,7 @@ def calc_hue(r: int, g: int, b: int) -> int:
     if maxnum == g:
         return 60 * ((b - r) / (maxnum - minnum)) + 120
 
+
 def getline() -> None:
     global COLORL, COLORR, COLORLR, COLORLG, COLORLB, COLORRR, COLORRG, COLORRB, COLORLSUM, COLORRSUM, COLORLHUE, COLORRHUE
     COLORLSUMBEFORE = COLORLSUM
@@ -115,6 +116,7 @@ def isgreen_R() -> bool:
     if 125 < COLORRHUE < 130 and not isblack_R() and not iswhite_R():
         return True
 
+
 def avoid():
     global TOUCHL, TOUCHR, MOTORL, MOTORR
     LBLACK = RBLACK = False
@@ -143,7 +145,8 @@ def avoid():
         getline()
         MOTORL.run(200)
         MOTORR.run(-200)
-    
+
+
 def uturn():
     global MOTORL, MOTORR
     MOTORL.run(200)
@@ -158,6 +161,7 @@ def uturn():
         MOTORL.run(200)
         MOTORR.run(-200)
 
+
 if DEBUG_COLORSENSOR:
     while True:
         getline()
@@ -167,11 +171,10 @@ if DEBUG_COLORSENSOR:
         print("RHUE:", COLORRHUE)
         time.sleep(0.1)
 
-
 cnt = 0
 
 while True:
-    cnt+=1
+    cnt += 1
     getline()
     if DEBUGPRINT:
         print(COLORLR, COLORLG, COLORLB)
@@ -193,7 +196,7 @@ while True:
         MOTORL.run(200)
         MOTORR.run(-200)
         time.sleep(0.3)
-        cnt=0
+        cnt = 0
     if isblack_R() and cnt >= 20 and not isblack_L():
         EV3.speaker.beep(frequency=1000)
         while isblack_R():
@@ -207,7 +210,7 @@ while True:
         MOTORL.run(-200)
         MOTORR.run(200)
         time.sleep(0.3)
-        cnt=0
+        cnt = 0
     if isgreen_L() and cnt >= 40 and not isgreen_R():
         print("isleft")
         EV3.speaker.beep(frequency=1000)
@@ -241,7 +244,7 @@ while True:
                 MOTORL.run(200)
                 MOTORR.run(-200)
         else:
-            cnt=0
+            cnt = 0
     if isgreen_R() and cnt >= 40 and not isgreen_L():
         print("isright")
         EV3.speaker.beep(frequency=2000)
@@ -275,7 +278,7 @@ while True:
                 MOTORL.run(200)
                 MOTORR.run(-200)
         else:
-            cnt=0
+            cnt = 0
     if TOUCHL.pressed() and TOUCHR.pressed():
         EV3.speaker.beep(frequency=1000)
         avoid()
