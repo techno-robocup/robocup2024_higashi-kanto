@@ -11,7 +11,7 @@ import time
 
 DEBUGPRINT = True
 DEBUG_MOTOR = False
-DEBUG_COLORSENSOR = False
+DEBUG_COLORSENSOR = True
 
 DEFAULT_SPEED = 120
 DEFAULT_PROPORTION = 1
@@ -44,6 +44,7 @@ COLORRHUE = 0
 ISUM = 0
 DSUM = 0
 
+MOTORARM.run(-100)
 
 def calc_hue(r: int, g: int, b: int) -> int:
     if r == g and g == b:
@@ -103,23 +104,49 @@ def iswhite_R() -> bool:
 
 def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
-    if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 40:
+    if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 10:
         return False
     if 140 < COLORLHUE < 150 and not isblack_L() and not iswhite_L():
         return True
+    return False
 
 
 def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
-    if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 40:
+    if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 10:
         return False
     if 125 < COLORRHUE < 130 and not isblack_R() and not iswhite_R():
         return True
+    return False
 
+def isred_L() -> bool:
+    global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
+    # print("left red check")
+    print(max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB))
+    print(COLORLHUE)
+    if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 10:
+        return False 
+    if 330 < COLORLHUE or COLORLHUE < 30:
+        return True
+    return False
+
+def isred_R() -> bool:
+    global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
+    # print("right red check")
+    print(max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB))
+    print(COLORRHUE)
+    if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 10:
+        return False
+    if 330 < COLORRHUE or COLORRHUE < 30:
+        return True
+    return False
 
 def avoid():
     global TOUCHL, TOUCHR, MOTORL, MOTORR
     LBLACK = RBLACK = False
+    MOTORL.run(-200)
+    MOTORR.run(-200)
+    time.sleep(0.3)
     MOTORL.run(200)
     MOTORR.run(-200)
     time.sleep(1)
@@ -169,6 +196,8 @@ if DEBUG_COLORSENSOR:
         print("R:", COLORRSUM)
         print("LHUE:", COLORLHUE)
         print("RHUE:", COLORRHUE)
+        print(COLORLR, COLORLG, COLORLB)
+        print(COLORRR, COLORRG, COLORRB)
         time.sleep(0.1)
 
 cnt = 0
@@ -179,6 +208,8 @@ while True:
     if DEBUGPRINT:
         print(COLORLR, COLORLG, COLORLB)
         print(COLORRR, COLORRG, COLORRB)
+        print(COLORLHUE)
+        print(COLORRHUE)
     MOTORL.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORLSUM - COLORRSUM) +
                ISUM * DEFAULT_I + DSUM * DEFAULT_D)
     MOTORR.run(DEFAULT_SPEED + DEFAULT_PROPORTION * (COLORRSUM - COLORLSUM) -
@@ -220,17 +251,14 @@ while True:
         getline()
         if isgreen_R():
             uturn()
+            print("uturning")
             continue
-        # if not isgreen_L():
-        #     print("isleftcancel")
-        #     print(COLORLR, COLORLG, COLORLB)
-        #     print(COLORRR, COLORRG, COLORRB)
-        #     continue
         while not isblack_L() and not iswhite_L():
             getline()
             MOTORL.run(200)
             MOTORR.run(200)
         if isblack_L():
+            print("correct")
             while isblack_L():
                 getline()
                 MOTORL.run(200)
@@ -244,6 +272,7 @@ while True:
                 MOTORL.run(200)
                 MOTORR.run(-200)
         else:
+            print("wrong")
             cnt = 0
     if isgreen_R() and cnt >= 40 and not isgreen_L():
         print("isright")
@@ -254,17 +283,14 @@ while True:
         getline()
         if isgreen_L():
             uturn()
+            print("Uturning")
             continue
-            # if not isgreen_R():
-            #     print("isrightcancel")
-            #     print(COLORLR, COLORLG, COLORLB)
-            #     print(COLORRR, COLORRG, COLORRB)
-            #     continue
         while not isblack_R() and not iswhite_R():
             getline()
             MOTORL.run(200)
             MOTORR.run(200)
         if isblack_R():
+            print("correct")
             while isblack_R():
                 getline()
                 MOTORL.run(200)
@@ -278,6 +304,7 @@ while True:
                 MOTORL.run(200)
                 MOTORR.run(-200)
         else:
+            print("wrong")
             cnt = 0
     if TOUCHL.pressed() and TOUCHR.pressed():
         EV3.speaker.beep(frequency=1000)
@@ -285,3 +312,5 @@ while True:
     if isgreen_L() and isgreen_R():
         EV3.speaker.beep(frequency=4000)
         uturn()
+    if isred_L() and isred_R():
+        exit()
