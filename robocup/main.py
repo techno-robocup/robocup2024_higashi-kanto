@@ -46,6 +46,7 @@ DSUM = 0
 
 MOTORARM.run(-100)
 
+
 def calc_hue(r: int, g: int, b: int) -> int:
     if r == g and g == b:
         return 0
@@ -119,16 +120,18 @@ def isgreen_R() -> bool:
         return True
     return False
 
+
 def isred_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
     # print("left red check")
     print(max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB))
     print(COLORLHUE)
     if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 10:
-        return False 
+        return False
     if 330 < COLORLHUE or COLORLHUE < 30:
         return True
     return False
+
 
 def isred_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
@@ -140,6 +143,7 @@ def isred_R() -> bool:
     if 330 < COLORRHUE or COLORRHUE < 30:
         return True
     return False
+
 
 def avoid():
     global TOUCHL, TOUCHR, MOTORL, MOTORR
