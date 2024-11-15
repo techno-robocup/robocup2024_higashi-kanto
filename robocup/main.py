@@ -11,7 +11,7 @@ import time
 
 DEBUGPRINT = True
 DEBUG_MOTOR = False
-DEBUG_COLORSENSOR = True
+DEBUG_COLORSENSOR = False
 
 DEFAULT_SPEED = 120
 DEFAULT_PROPORTION = 1
@@ -106,7 +106,7 @@ def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
     if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 10:
         return False
-    if 140 < COLORLHUE < 150 and not isblack_L() and not iswhite_L():
+    if 140 < COLORLHUE < 170 and not isblack_L() and not iswhite_L():
         return True
     return False
 
@@ -265,12 +265,12 @@ while True:
                 MOTORR.run(200)
             while not isblack_L():
                 getline()
-                MOTORL.run(200)
-                MOTORR.run(-200)
+                MOTORL.run(-200)
+                MOTORR.run(200)
             while isblack_L():
                 getline()
-                MOTORL.run(200)
-                MOTORR.run(-200)
+                MOTORL.run(-200)
+                MOTORR.run(200)
         else:
             print("wrong")
             cnt = 0
@@ -313,4 +313,4 @@ while True:
         EV3.speaker.beep(frequency=4000)
         uturn()
     if isred_L() and isred_R():
-        exit()
+        break
