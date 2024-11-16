@@ -13,7 +13,7 @@ DEBUGPRINT = True
 DEBUG_MOTOR = False
 DEBUG_COLORSENSOR = False
 
-DEFAULT_SPEED = 120
+DEFAULT_SPEED = 130
 DEFAULT_PROPORTION = 1
 DEFAULT_I = 0.00052
 DEFAULT_D = 12
@@ -176,6 +176,7 @@ def avoid():
         getline()
         MOTORL.run(200)
         MOTORR.run(-200)
+
 
 
 def uturn():
