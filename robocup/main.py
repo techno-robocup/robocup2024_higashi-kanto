@@ -171,6 +171,10 @@ def avoid():
     while not isblack_R():
         getline()
         MOTORL.run(200)
+        MOTORR.run(200)
+    while not isblack_R():
+        getline()
+        MOTORL.run(200)
         MOTORR.run(-200)
     while isblack_R():
         getline()
