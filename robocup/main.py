@@ -16,7 +16,7 @@ DEBUG_COLORSENSOR = False
 DEFAULT_SPEED = 130
 DEFAULT_PROPORTION = 1
 DEFAULT_I = 0.00052
-DEFAULT_D = 12
+DEFAULT_D = 14
 WHITE_THRESHOLD = 100
 BLACK_THRESHOLD = 50
 
@@ -160,7 +160,7 @@ def avoid():
             MOTORL.run(200)
             MOTORR.run(-200)
         else:
-            MOTORL.run(50)
+            MOTORL.run(70)
             MOTORR.run(200)
         if isblack_L():
             LBLACK = True
