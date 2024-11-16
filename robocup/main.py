@@ -107,7 +107,7 @@ def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
     if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 10:
         return False
-    if 170 < COLORLHUE < 190 and not isblack_L() and not iswhite_L():
+    if 175 <= COLORLHUE <= 185 and not isblack_L() and not iswhite_L():
         return True
     return False
 
@@ -116,7 +116,7 @@ def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
     if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 10:
         return False
-    if 130 < COLORRHUE < 140 and not isblack_R() and not iswhite_R():
+    if 135 <= COLORRHUE < 145 and not isblack_R() and not iswhite_R():
         return True
     return False
 
