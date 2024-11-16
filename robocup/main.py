@@ -9,9 +9,9 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 import time
 
-DEBUGPRINT = True
+DEBUGPRINT = False
 DEBUG_MOTOR = False
-DEBUG_COLORSENSOR = False
+DEBUG_COLORSENSOR = True
 
 DEFAULT_SPEED = 130
 DEFAULT_PROPORTION = 1
@@ -107,7 +107,7 @@ def isgreen_L() -> bool:
     global COLORLR, COLORLG, COLORLB, COLORLHUE, COLORLSUM
     if max(COLORLR, COLORLG, COLORLB) - min(COLORLR, COLORLG, COLORLB) <= 10:
         return False
-    if 140 < COLORLHUE < 170 and not isblack_L() and not iswhite_L():
+    if 170 < COLORLHUE < 190 and not isblack_L() and not iswhite_L():
         return True
     return False
 
@@ -116,7 +116,7 @@ def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
     if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 10:
         return False
-    if 125 < COLORRHUE < 130 and not isblack_R() and not iswhite_R():
+    if 130 < COLORRHUE < 150 and not isblack_R() and not iswhite_R():
         return True
     return False
 
@@ -201,13 +201,13 @@ def uturn():
 if DEBUG_COLORSENSOR:
     while True:
         getline()
-        print("L:", COLORLSUM)
-        print("R:", COLORRSUM)
-        print("LHUE:", COLORLHUE)
-        print("RHUE:", COLORRHUE)
-        print(COLORLR, COLORLG, COLORLB)
-        print(COLORRR, COLORRG, COLORRB)
-        time.sleep(0.1)
+        EV3.screen.print("L:", COLORLSUM)
+        EV3.screen.print("R:", COLORRSUM)
+        EV3.screen.print("LHUE:", COLORLHUE)
+        EV3.screen.print("RHUE:", COLORRHUE)
+        EV3.screen.print(COLORLR, COLORLG, COLORLB)
+        EV3.screen.print(COLORRR, COLORRG, COLORRB)
+        time.sleep(1)
 
 cnt = 0
 
