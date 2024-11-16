@@ -11,7 +11,7 @@ import time
 
 DEBUGPRINT = False
 DEBUG_MOTOR = False
-DEBUG_COLORSENSOR = True
+DEBUG_COLORSENSOR = False
 
 DEFAULT_SPEED = 130
 DEFAULT_PROPORTION = 1
@@ -77,14 +77,14 @@ def getline() -> None:
 
 def isblack_L() -> bool:
     global COLORLSUM
-    if COLORLSUM <= 30:
+    if COLORLSUM <= 40:
         return True
     return False
 
 
 def isblack_R() -> bool:
     global COLORRSUM
-    if COLORRSUM <= 30:
+    if COLORRSUM <= 40:
         return True
     return False
 
@@ -116,7 +116,7 @@ def isgreen_R() -> bool:
     global COLORRR, COLORRG, COLORRB, COLORRHUE, COLORRSUM
     if max(COLORRR, COLORRG, COLORRB) - min(COLORRR, COLORRG, COLORRB) <= 10:
         return False
-    if 130 < COLORRHUE < 150 and not isblack_R() and not iswhite_R():
+    if 130 < COLORRHUE < 140 and not isblack_R() and not iswhite_R():
         return True
     return False
 
@@ -172,6 +172,10 @@ def avoid():
         getline()
         MOTORL.run(200)
         MOTORR.run(200)
+    MOTORL.run(200)
+    MOTORR.run(200)
+    time.sleep(0.3)
+    getline()
     while not isblack_R():
         getline()
         MOTORL.run(200)
