@@ -44,7 +44,7 @@ COLORRHUE = 0
 ISUM = 0
 DSUM = 0
 
-MOTORARM.run(-100)
+# MOTORARM.run(-100)
 
 
 def calc_hue(r: int, g: int, b: int) -> int:
@@ -215,7 +215,21 @@ if DEBUG_COLORSENSOR:
 
 cnt = 0
 
+# while True:
+#     print(EV3.buttons.pressed())
+
+
 while True:
+    if Button.CENTER in EV3.buttons.pressed():
+        MOTORL.brake()
+        MOTORR.brake()
+        EV3.speaker.beep()
+        time.sleep(0.5)
+        while True:
+            if Button.CENTER in EV3.buttons.pressed():
+                EV3.speaker.beep()
+                time.sleep(0.5)
+                break
     cnt += 1
     getline()
     if DEBUGPRINT:
