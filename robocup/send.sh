@@ -1,0 +1,1 @@
+scp ./main.py ev3dev.local:robocup/main.py
